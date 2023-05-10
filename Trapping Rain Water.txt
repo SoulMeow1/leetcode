@@ -1,0 +1,63 @@
+int trap(int* height, int heightSize){
+    /*int cnt = 0, max = 0;
+    for(int  i = 0; i < heightSize; i++){//finding max height
+        if(max < height[i]) max = height[i];
+    }
+    printf("max height: %d\n", max);
+    int j = 0;
+    int k = heightSize - 1;
+    for(int  i = 0; i < max; i++){
+        if(height[j] <= i){
+            while(height[j] <= i) j++;
+            printf("height[%d]: %d, ", j, height[j]);
+        }
+        if(height[k] <= i){
+            while(height[k] <= i) k--;
+            printf("height[%d]: %d, \n", k, height[k]);
+        }
+        for(int x = j; x != k; x++){
+            if(height[x] <= i) cnt++;
+        }
+        printf("count: %d\n", cnt);
+    }
+    return cnt;*/
+
+    int *L = (int*)malloc(sizeof(int) * heightSize);
+    int *R = (int*)malloc(sizeof(int) * heightSize);
+    int max = 0, count = 0;
+    for(int i = 0; i < heightSize; i++){
+        if(max >= height[i]) L[i] = max;
+        else{
+            max = height[i];
+            L[i] = max;
+        }
+        //printf("%d ", L[i]);
+    } 
+    //printf("\n");
+    max = 0;
+    for(int i = heightSize - 1; i >= 0; i--){
+        if(max >= height[i]) R[i] = max;
+        else{
+            max = height[i];
+            R[i] = max;
+        }
+    }
+    /*for(int i = 0; i < heightSize; i++){
+        printf("%d ", R[i]);
+    }
+    printf("\n");*/
+    for(int i = 0; i < heightSize; i++){
+        /*if(L[i] < R[i]){
+            printf("%d ", L[i] - height[i]);
+            count += L[i] - height[i];
+        }
+        else {
+            printf("%d ", R[i] - height[i]);
+            count += R[i] - height[i];
+        }*/
+        count += (L[i] < R[i]) ? L[i] - height[i] : R[i] - height[i];
+    }
+    free(L);
+    free(R);
+    return count;
+}

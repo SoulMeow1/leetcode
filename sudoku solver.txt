@@ -1,0 +1,68 @@
+bool contains(char** board, int boardSize, int* boardColSize, char c, int row, int col){
+    for(int i = 0; i < 9; i++){
+        if(board[row][i] == c) return true;
+        if(board[i][col] == c) return true;
+    }
+    for(int i = (row / 3) * 3; i < ((row / 3) * 3) + 3; i++){
+        for(int j = (col / 3) * 3; j < ((col / 3) * 3) + 3; j++){
+            if(board[i][j] == c) return true;
+        }
+    }
+    return false;
+}
+
+void solveSudoku(char** board, int boardSize, int* boardColSize){
+    //lets do this by inefficient backtracking
+    bool **blank = (bool**)malloc(sizeof(bool*) * 9);
+    for(int i = 0; i < 9; i++) {
+        blank[i] = (bool*)malloc(sizeof(bool) * 9);
+        for(int j = 0; j < 9; j++){
+            if(board[i][j] == '.') blank[i][j] = true;
+            else blank[i][j] = false;
+            printf("%d ", blank[i][j]);
+        }
+        printf("\n");
+    }
+    int rowptr = 0, colptr = 0; 
+    printf("entering while loop\n");
+    while(rowptr < 9){
+        bool backtrack = false;
+        if(blank[rowptr][colptr] == false){
+            colptr++;
+            if(colptr == 9){
+                colptr = 0;
+                rowptr++;
+            }
+            continue;
+        }
+        else if(blank[rowptr][colptr] == true){
+            char c;
+            if(board[rowptr][colptr] == '.') c = '1';//49 in decimal, "9" is 57 in decimal
+            else c = board[rowptr][colptr] + 1;
+            while(contains(board, boardSize, boardColSize, c, rowptr, colptr) && c < 58) c++;
+            if(c == 58) {
+                backtrack = true;
+                printf("[%d][%d] = backtracking\n", rowptr, colptr);
+                board[rowptr][colptr] = '.';
+            }
+            else {
+                printf("[%d][%d] = %c\n", rowptr, colptr, c);
+                board[rowptr][colptr] = c;
+                colptr++;
+                if(colptr == 9){
+                    colptr = 0;
+                    rowptr++;
+                }
+            }
+        }
+        if(backtrack == true){
+            do{
+                colptr--;
+                if(colptr == -1){
+                    colptr = 8;
+                    rowptr--;
+                }
+            }while(blank[rowptr][colptr] == false);
+        }
+    }
+}
